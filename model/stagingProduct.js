@@ -3,6 +3,7 @@ const { ObjectId } = mongoose.Schema;
 
 const stagingproductSchema = new mongoose.Schema(
   {
+    id: String,
     name: {
       type: String,
     },
@@ -14,8 +15,9 @@ const stagingproductSchema = new mongoose.Schema(
     flavors: Array,
     sizes: String,
     approvStatus: Boolean,
-    added_by:String,
-    approved_by:String
+    rejectStatus: { type: Boolean, default: "false" },
+    added_by: String,
+    approved_by: String,
   },
   { timestamps: true }
 );

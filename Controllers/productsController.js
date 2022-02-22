@@ -1,11 +1,40 @@
 const Product = require("../model/product");
 const Approval = require("../model/stagingProduct");
 const getproducts = async (req, res, next) => {
-  const products = await Product.find({ approvStatus: true }).sort({
+  const products = await Product.find({}).sort({
     price: -1,
   });
-  console.log(products)
-  res.json(products);
+
+  console.log(products);
+  return res.json({ products: products });
+};
+
+const productsRejected = async (req, res, next) => {
+  //console.log(req.body);
+  try {
+    //await Approval.findOneAndRemove({ name: req.body.name });
+    const products = await Product.find({ name: req.body.name }).sort({
+      price: -1,
+    });
+    //console.log(products);
+    console.log(products);
+    products.map(async (product) => {
+      console.log(product);
+      if (req.body.name === product.name) {
+        product.rejectStatus = true;
+        await product.save();
+      }
+    });
+
+    //console.log(products);
+
+    await Approval.findOneAndRemove({ name: req.body.name });
+    return res.status(200).json({
+      message: "It is rejected",
+    });
+  } catch (err) {
+    console.log(err);
+  }
 };
 
 const updateproductsforapproval = async (req, res, next) => {
@@ -33,7 +62,9 @@ const addproducts = async (req, res, next) => {
       });
       //console.log(oldproduct);
       if (oldproduct !== null) {
-        if (oldproduct.id === req.body.id) {
+        console.log(oldproduct.id);
+        console.log(req.body.id);
+        if (oldproduct.name === req.body.name) {
           const updatedPlot = await Product.findOneAndUpdate(
             { name: req.body.name },
             { $set: req.body },
@@ -57,6 +88,7 @@ const addproducts = async (req, res, next) => {
           approved_by: req.body.approved_by,
         });
         const product = await newProduct.save();
+        console.log(product);
         await Approval.findOneAndRemove({ name: req.body.name });
         return res.json({ message: "new product approved" });
       }
@@ -70,26 +102,31 @@ const addproducts = async (req, res, next) => {
 };
 
 const addproductsforapproval = async (req, res, next) => {
-  console.log(req.body);
+  console.log(req.body.approvStatus);
   try {
-
     //check if the product exist in products
     let productinapprovallist = await Approval.findOne({
       name: req.body.productValue.productname,
     });
     if (productinapprovallist) {
+      console.log("exists in approval listy")
       const updatedPlot = await Product.findOneAndUpdate(
         { name: req.body.productValue.productname },
         { $set: req.body },
         { new: false }
       );
-      const product = await updatedPlot.save();
-      await Approval.findOneAndRemove({ name: req.body.productValue.productname });
+       updatedPlot.save();
+      // await Approval.findOneAndRemove({
+      //   name: req.body.productValue.productname,
+      // });
       return res.json({ message: "existing product resent for approval" });
     }
 
     if (!productinapprovallist) {
+
+      console.log("does not exist in approval")
       const newProduct = new Approval({
+        id: req.body.id,
         name: req.body.productValue.productname,
         imageUrls: req.body.urlsSelected,
         desc: req.body.productValue.desc,
@@ -101,7 +138,13 @@ const addproductsforapproval = async (req, res, next) => {
         approved_by: req.body.approved_by,
       });
       const product = await newProduct.save();
-      await Product.findOneAndRemove({ name: req.body.productValue.productname });
+
+      const updatedPlot = await Product.findOneAndUpdate(
+        { name: req.body.productValue.productname },
+        { $set: req.body },
+        { new: false }
+      );
+      updatedPlot ? await updatedPlot.save() : null;
       return res.json({
         message: "new product added for approval",
       });
@@ -130,4 +173,5 @@ module.exports = {
   getproductspending,
   deleteproducts,
   updateproductsforapproval,
+  productsRejected,
 };

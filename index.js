@@ -46,7 +46,9 @@ if (process.env.NODE_ENV === "production") {
     )
     .then(() => console.log("DB Connected!"))
     .catch((err) => {
+
       console.log(`DB Connection Error: ${err.message}`);
+      throw err
     });
 } else if (
   process.env.NODE_ENV === "development" ||
@@ -65,6 +67,7 @@ if (process.env.NODE_ENV === "production") {
     .then(() => console.log(`Database connected to developement db`))
     .catch((err) => {
       console.log(`DB Connection Error: ${err.message}`);
+      throw err
     });
 }
 

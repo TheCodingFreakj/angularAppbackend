@@ -6,7 +6,8 @@ const {
   addproductsforapproval,
   getproductspending,
   deleteproducts,
-  updateproductsforapproval
+  updateproductsforapproval,
+  productsRejected
 } = require("../controllers/productsController");
 
 router.post("/add-product", addproducts);
@@ -15,4 +16,5 @@ router.get("/deleteproducts", deleteproducts);
 router.get("/getpendingproducts", getproductspending);
 router.post("/sendApproval", addproductsforapproval);
 router.post("/updateproApproval", updateproductsforapproval);
+router.post("/rejectChanges", productsRejected);
 module.exports = router;
