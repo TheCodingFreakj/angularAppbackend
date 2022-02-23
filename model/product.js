@@ -14,7 +14,8 @@ const productSchema = new mongoose.Schema(
     desc: String,
     flavors: Array,
     sizes: String,
-    approvStatus: Boolean,
+    deleteStatus: { type: Boolean, default: "false"},
+    approvStatus: { type: Boolean, default: "false" },
     rejectStatus: { type: Boolean, default: "false" },
     added_by:String,
     approved_by:String

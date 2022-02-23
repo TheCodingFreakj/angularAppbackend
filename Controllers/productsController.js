@@ -100,22 +100,84 @@ const addproducts = async (req, res, next) => {
     });
   }
 };
-
-const addproductsforapproval = async (req, res, next) => {
-  console.log(req.body.approvStatus);
+const addProductToDeleteApproval = async (req, res, next) => {
+  console.log(req.body);
   try {
+    let productinapprovallist = await Approval.findOne({
+      name: req.body.idDelete.name,
+    });
+
+    if (productinapprovallist) {
+      console.log("exists");
+      const updatedPlot = await Product.findOneAndUpdate(
+        { name: req.body.idDelete.name },
+        { $set: req.body },
+        { new: false }
+      );
+      updatedPlot.save()
+      // return res.status(400).json({
+      //   message: "You have already send the delete request ",
+      // });
+
+      return res.json({
+        message: "existing product added for delete approval",
+      });
+    }
+
+    if (!productinapprovallist) {
+      console.log("donet exists");
+
+      const newProduct = new Approval({
+        id: req.body.idDelete.id,
+        name: req.body.idDelete.name,
+        imageUrls: req.body.idDelete.imageUrls,
+        desc: req.body.idDelete.desc,
+        price: req.body.idDelete.price,
+        flavors: req.body.idDelete.flavors,
+        sizes: req.body.idDelete.size,
+        added_by: req.body.idDelete.added_by,
+        deleteStatus: req.body.statusReject,
+        approved_by: req.body.idDelete.approved_by,
+      });
+      const product = await newProduct.save();
+      const updatedPlot = await Product.findOneAndUpdate(
+        { name: req.body.idDelete.name },
+        { $set: req.body },
+        { new: false }
+      );
+      updatedPlot ? await updatedPlot.save() : null;
+      return res.json({
+        message: "new product added for delete approval",
+      });
+    }
+  } catch (err) {
+    console.log(err);
+  }
+};
+const addproductsforapproval = async (req, res, next) => {
+  console.log(req.body);
+  try {
+    //if (req.body.rejectStatus === true) {
+    // await Product.findOneAndRemove({
+    //   name: req.body.idDelete,
+    // });
+
+    // await Approval.findOneAndRemove({
+    //   name: req.body.productValue.productname,
+    // });
+    //}
     //check if the product exist in products
     let productinapprovallist = await Approval.findOne({
       name: req.body.productValue.productname,
     });
     if (productinapprovallist) {
-      console.log("exists in approval listy")
+      console.log("exists in approval listy");
       const updatedPlot = await Product.findOneAndUpdate(
         { name: req.body.productValue.productname },
         { $set: req.body },
         { new: false }
       );
-       updatedPlot.save();
+      updatedPlot.save();
       // await Approval.findOneAndRemove({
       //   name: req.body.productValue.productname,
       // });
@@ -123,8 +185,7 @@ const addproductsforapproval = async (req, res, next) => {
     }
 
     if (!productinapprovallist) {
-
-      console.log("does not exist in approval")
+      console.log("does not exist in approval");
       const newProduct = new Approval({
         id: req.body.id,
         name: req.body.productValue.productname,
@@ -144,6 +205,7 @@ const addproductsforapproval = async (req, res, next) => {
         { $set: req.body },
         { new: false }
       );
+      console.log(updatedPlot)
       updatedPlot ? await updatedPlot.save() : null;
       return res.json({
         message: "new product added for approval",
@@ -162,8 +224,28 @@ const getproductspending = async (req, res, next) => {
   res.json(products);
 };
 const deleteproducts = async (req, res, next) => {
-  const products = await Approval.find().sort({ price: -1 });
-  res.json(products);
+  console.log(req.params);
+  console.log(req.query.approveStatus);
+
+  try {
+    if (req.query.approveStatus === "true") {
+      const productdel = await Approval.findOneAndRemove({
+        name: req.params.reqData,
+      });
+
+      const deletedp = await Product.findOneAndRemove({
+        name: req.params.reqData,
+      });
+      res.json({ message: "Product deleted" });
+    } else {
+      const productdel = await Approval.findOneAndRemove({
+        name: req.params.reqData,
+      });
+      res.json({ message: "Product delete Rejected" });
+    }
+  } catch (error) {
+    console.log(error);
+  }
 };
 
 module.exports = {
@@ -174,4 +256,5 @@ module.exports = {
   deleteproducts,
   updateproductsforapproval,
   productsRejected,
+  addProductToDeleteApproval,
 };
