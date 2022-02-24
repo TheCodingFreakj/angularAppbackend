@@ -1,0 +1,18 @@
+version: "3"
+services:
+       angularbackend-app:
+           container_name: angularbackend-app
+           image: latest123/angularbackend-app
+           restart: always
+           build: .
+           ports:
+             - "5000:5000"
+           links:
+             - mongo
+       mongo:
+             container_name: mongo
+             image: mongo
+             volumes:
+               - ./data:/data/db
+             ports:
+               - '27017:27017'
