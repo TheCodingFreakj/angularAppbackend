@@ -1,20 +1,16 @@
 FROM node:16
 
 # Create app directory
-RUN mkdir -p /usr/src/app
-WORKDIR /usr/src/app
+WORKDIR /app
 
 # Install app dependencies
-# A wildcard is used to ensure both package.json AND package-lock.json are copied
-# where available (npm@5+)
-COPY package*.json /usr/src/app
+COPY package*.json ./
 
 RUN npm install
-# If you are building your code for production
-# RUN npm ci --only=production
 
-# Bundle app source
-COPY . /usr/src/app
+# Copying rest of the application to app directory
+COPY . /app
 
+# Expose the port and start the application
 EXPOSE 5000
 CMD [ "node", "index.js" ]
