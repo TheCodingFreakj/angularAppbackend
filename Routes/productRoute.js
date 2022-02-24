@@ -9,7 +9,7 @@ const {
   updateproductsforapproval,
   productsRejected,
   addProductToDeleteApproval
-} = require("../controllers/productsController");
+} = require("../Controllers/productsController");
 
 router.post("/add-product", addproducts);
 router.get("/getproducts", getproducts);
