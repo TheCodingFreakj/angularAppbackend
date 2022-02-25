@@ -13,4 +13,6 @@ COPY . /app
 
 # Expose the port and start the application
 EXPOSE 5000
+ARG DOCKER_ENV
+ENV NODE_ENV=${DOCKER_ENV}
 CMD [ "node", "index.js" ]

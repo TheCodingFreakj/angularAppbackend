@@ -46,9 +46,8 @@ if (process.env.NODE_ENV === "production") {
     )
     .then(() => console.log("DB Connected!"))
     .catch((err) => {
-
       console.log(`DB Connection Error: ${err.message}`);
-      throw err
+      throw err;
     });
 } else if (
   process.env.NODE_ENV === "development" ||
@@ -57,17 +56,11 @@ if (process.env.NODE_ENV === "production") {
   mongoose
     .connect(
       "mongodb+srv://pallavi57:pallavi57@cluster0.joavu.mongodb.net/angularDb?retryWrites=true&w=majority"
-      //   {
-      //     useNewUrlParser: true,
-      //     useUnifiedTopology: true,
-      //     useFindAndModify: false,
-      //     useCreateIndex: true,
-      //   }
     )
     .then(() => console.log(`Database connected to developement db`))
     .catch((err) => {
       console.log(`DB Connection Error: ${err.message}`);
-      throw err
+      throw err;
     });
 }
 
@@ -97,5 +90,5 @@ app.use("/api/v1", UserRoute);
 
 const ProductRoute = require("./Routes/productRoute");
 app.use("/api/v1", ProductRoute);
-console.log("This is runing on docke at port ")
+console.log("This is runing on docke at port ");
 app.listen(port, () => console.log(`BACK_END_SERVICE_PORT: ${port}`));
