@@ -5,8 +5,8 @@
   "main": "index.js",
   "scripts": {
     "dev": "cross-env  NODE_ENV=development nodemon index",
+    "start:dev": "cross-env  NODE_ENV=development  nodemon index",
     "prod": "cross-env  NODE_ENV=production nodemon index",
-    "start:dev": "concurrently --kill-others-on-fail \"npm run dev\" \"npm run start --prefix client\"",
     "client": "cd client && npm run build",
     "start:prod ": "concurrently \"npm run prod\" \"npm run client\"",
     "start": "concurrently --kill-others-on-fail \"npm run dev\" \"npm run start --prefix client\""

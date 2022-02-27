@@ -57,7 +57,10 @@ if (process.env.NODE_ENV === "production") {
     .connect(
       "mongodb+srv://pallavi57:pallavi57@cluster0.joavu.mongodb.net/angularDb?retryWrites=true&w=majority"
     )
-    .then(() => console.log(`Database connected to developement db`))
+    .then(() => {
+      console.log(`Database connected to developement db`);
+      console.log(`This is connected to docker container pushed to docker hub`);
+    })
     .catch((err) => {
       console.log(`DB Connection Error: ${err.message}`);
       throw err;
