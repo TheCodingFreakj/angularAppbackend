@@ -1,27 +1,53 @@
-version: '3.8'
+# version: '3.8'
+# services:
+#   web:
+#     build:
+#       context: ./
+#       target: development
+#     volumes:
+#       - .:/app
+#     command: npm run start:dev
+#     ports:
+#       - "5000:5000"
+#     environment:
+#       NODE_ENV: development
+
+
+#   webprod:
+#     build:
+#       context: ./
+#       target: production
+#     volumes:
+#       - .:/app
+#     command: npm run start:prod
+#     ports:
+#       - "5001:5001"
+#     environment:
+#       NODE_ENV: production   
+version: '3.7'
 services:
   web:
     build:
       context: ./
-      target: development
+      dockerfile: Dockerfile
+      args:
+        ENV: sandbox
     volumes:
       - .:/app
-    command: npm run start:dev
     ports:
       - "5000:5000"
-    environment:
-      NODE_ENV: development
+   
+
 
 
   webprod:
     build:
       context: ./
-      target: production
+      dockerfile: Dockerfile
+      args:
+        ENV: prod 
     volumes:
       - .:/app
-    command: npm run start:prod
     ports:
-      - "5001:5001"
-    environment:
-      NODE_ENV: production    
-      
+      - "5001:5001"      
+
