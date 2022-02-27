@@ -34,4 +34,7 @@ COPY package*.json ./
 EXPOSE 5000
 RUN npm install
 COPY . /
-RUN if [  $ENV= sandbox ] ; then npm run dev ; else npm run prod ; fi
+# RUN if [  $ENV= sandbox ] ; then npm run dev ; else npm run prod ; fi
+
+RUN if [  "$ENV"= "sandbox" ] ; then npm run dev ; fi
+RUN if [  "$ENV"= "prod" ] ; then npm run prod ; fi
