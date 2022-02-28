@@ -1,0 +1,7 @@
+# Build Stage 1
+# This build created a staging docker image
+#
+FROM node:12.22.10-alpine as base 
+WORKDIR /dev
+COPY package*.json ./
+EXPOSE 5000

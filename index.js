@@ -34,23 +34,23 @@ app.use(cors());
 
 //connect fb
 
-if (process.env.NODE_ENV === "production") {
+if (process.env.NODE_ENV === "prod") {
   mongoose
     .connect(
-      "mongodb+srv://pallavi57:pallavi57@cluster0.07c2o.mongodb.net/angularDb?retryWrites=true&w=majority"
+      "mongodb+srv://pallavi57:pallavi57@cluster0.joavu.mongodb.net/angularDb?retryWrites=true&w=majority"
       //   {
       //     useNewUrlParser: true,
       //     useUnifiedTopology: true,
 
       //   }
     )
-    .then(() => console.log("DB Connected!"))
+    .then(() => console.log("Prod DB Connected!"))
     .catch((err) => {
       console.log(`DB Connection Error: ${err.message}`);
       throw err;
     });
 } else if (
-  process.env.NODE_ENV === "development" ||
+  process.env.NODE_ENV === "dev" ||
   process.env.NODE_ENV === "staging"
 ) {
   mongoose
@@ -76,6 +76,7 @@ if (process.env.NODE_ENV === "production") {
 //   //     useFindAndModify: false,
 //   //     useCreateIndex: true,
 //   //   }
+console.log(process.env.NODE_ENV)
 // )
 // .then(() => console.log(`Database connected to developement db`))
 // .catch((err) => {

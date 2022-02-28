@@ -1,40 +1,19 @@
-
-# FROM node:12.22.10-alpine as base
-# # Create app directory
-# WORKDIR /app
-
-# # Install app dependencies
-# COPY package*.json ./
-
-# EXPOSE 5000
-
-# FROM base as development
-# ENV NODE_ENV=development
-# RUN npm install
-# COPY . /
-# CMD [ "node", "index.js" ]
-
-
-# FROM base as production
-# ENV NODE_ENV=production
-# RUN npm install
-# COPY . /q
-# CMD [ "node", "index.js" ]
-
-
-
-FROM node:12.22.10-alpine as base
-ARG ENV
+# Build Stage 1
+# This build created a staging docker image
+#
+FROM node:12.22.10-alpine
 # Create app directory
-WORKDIR /app
+WORKDIR /usr/src/app
 
 # Install app dependencies
+# A wildcard is used to ensure both package.json AND package-lock.json are copied
+# where available (npm@5+)
 COPY package*.json ./
+# If you are building your code for production
+RUN npm ci --only=production
 
-EXPOSE 5000
-RUN npm install
-COPY . /
-# RUN if [  $ENV= sandbox ] ; then npm run dev ; else npm run prod ; fi
+# Bundle app source
+COPY . .
 
-RUN if [  "$ENV"= "sandbox" ] ; then npm run dev ; fi
-RUN if [  "$ENV"= "prod" ] ; then npm run prod ; fi
+EXPOSE 5634
+CMD [ "npm", "start" ]
